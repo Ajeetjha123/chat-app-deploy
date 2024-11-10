@@ -30,15 +30,18 @@ try {
 app.use("/api/user", userRoute);
 app.use("/api/message", messageRoute);
 
-//deploymenet
+//-----------------code for deploymenet----------
+
 if (process.env.NODE_ENV === "production") {
   const dirPath = path.resolve();
-  app.use(express.static("Frontend/dist"));
+  app.use(express.static("./Frontend/dist"));
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(dirPath, "Frontend", "dist", "index.html"));
+    res.sendFile(path.resolve(dirPath, "./Frontend/dist", "index.html"));
   });
 }
 
 server.listen(PORT, () => {
   console.log(`Server is Running on port ${PORT}`);
 });
+
+//"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
