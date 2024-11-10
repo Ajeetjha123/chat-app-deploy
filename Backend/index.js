@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -19,16 +20,25 @@ const PORT = process.env.PORT || 3001;
 const URI = process.env.MONGODB_URI;
 
 try {
-    mongoose.connect(URI);
-    console.log("Connected to MongoDB");
+  mongoose.connect(URI);
+  console.log("Connected to MongoDB");
 } catch (error) {
-    console.log(error);
+  console.log(error);
 }
 
 //routes
 app.use("/api/user", userRoute);
 app.use("/api/message", messageRoute);
 
+//deploymenet
+if (process.env.NODE_ENV === "production") {
+  const dirPath = path.resolve();
+  app.use(express.static("Frontend/dist"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(dirPath, "Frontend", "dist", "index.html"));
+  });
+}
+
 server.listen(PORT, () => {
-    console.log(`Server is Running on port ${PORT}`);
+  console.log(`Server is Running on port ${PORT}`);
 });
